@@ -1,0 +1,1 @@
+erlc -I src\includes -o ebin src\client.erl src\server.erl src\iso_message.erl src\socket_processing.erl src\tests.erl

@@ -1,0 +1,9 @@
+{application,iso8385server,
+             [{description,[]},
+              {vsn,"1"},
+              {registered,[]},
+              {applications,[kernel,stdlib]},
+              {mod,{iso8385server,[]}},
+              {env,[]},
+              {modules,[client,iso8385server,iso_message,socket_processing,
+                        tests]}]}.

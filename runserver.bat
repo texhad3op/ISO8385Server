@@ -1,0 +1,1 @@
+erl -noshell -pa /ebin -s server start -s init stop
