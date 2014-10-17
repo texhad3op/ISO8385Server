@@ -25,4 +25,6 @@
 -define(RESPONSE_CODE, response_code).
 -define(ADDITIONAL_RESPONSE_DATA, additional_response_data).
 -define(ADDITIONAL_AMOUNTS, additional_amounts).
-
+-define(RESERVED_ISO2, reserved_iso2).
+-define(ORIGINAL_DATA_ELEMENTS, original_data_elements).
+-define(REPLACEMENT_AMOUNTS, replacement_amounts).

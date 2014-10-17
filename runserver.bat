@@ -1,1 +1,1 @@
-erl -noshell -pa /ebin -s server start -s init stop
+erl -noshell -pa /ebin -s iso8385server start -s init stop

@@ -133,13 +133,16 @@ c_z(Str)->
 %=================================================================================================	
 
 generate_message(MTI, MessageValues)->
+	WholeMessage = generate_message_without_length(MTI, MessageValues),
+	Length = length(WholeMessage),
+	lists:append([Length div 256, Length rem 256], WholeMessage).
+	
+generate_message_without_length(MTI, MessageValues)->
 	ISO8385Type = get_message_structure(MTI),
 	Bitmap = get_message_bitmap_as_array(ISO8385Type, MessageValues),
 	BitmapBytes = stage2(generate_bitmap(Bitmap)),
 	MessageBytes = get_message_bytes(ISO8385Type, MessageValues),
-	WholeMessage = lists:append(MTI, lists:append(BitmapBytes, MessageBytes)),
-	Length = length(WholeMessage),
-	lists:append([Length div 256, Length rem 256], WholeMessage).
+	lists:append(MTI, lists:append(BitmapBytes, MessageBytes)).	
 	
 get_answer_code_for_message(MTI)->
 		case MTI of
@@ -178,9 +181,45 @@ get_message_structure(MTI)->
 					{#field{name=?PRIMARY_ACCOUNT_NUMBER,order_number=2},{#field_type{type=var,length=2}}},
 					{#field{name=?RESPONSE_CODE,order_number=39},{#field_type{type=fixed,length=2}}},
 					{#field{name=?ADDITIONAL_RESPONSE_DATA,order_number=44},{#field_type{type=fixed,length=25}}},
-					{#field{name=?ADDITIONAL_AMOUNTS,order_number=54},{#field_type{type=fixed,length=120}}},
+					{#field{name=?ADDITIONAL_AMOUNTS,order_number=54},{#field_type{type=fixed,length=120}}}
+					%{#field{name=?RESERVED_NATIONAL,order_number=57},{#field_type{type=var,length=3}}}
+					];
+
+		"0420" -> [		
+					{#field{name=?PRIMARY_ACCOUNT_NUMBER,order_number=2},{#field_type{type=var,length=2}}},
+					{#field{name=?PROCESSING_CODE,order_number=3},{#field_type{type=fixed,length=6}}},
+					{#field{name=?AMOUNT_TRANSACTION,order_number=4},{#field_type{type=fixed,length=12}}},
+					{#field{name=?TRANSMISSION_DATE_AND_TIME,order_number=7},{#field_type{type=fixed,length=10}}},
+					{#field{name=?SYSTEM_TRACE_AUDIT_NUMBER,order_number=11},{#field_type{type=fixed,length=6}}},
+					{#field{name=?TIME_LOCAL_TRANSACTION,order_number=12},{#field_type{type=fixed,length=6}}},
+					{#field{name=?DATE_LOCAL_TRANSACTION,order_number=13},{#field_type{type=fixed,length=4}}},
+					{#field{name=?DATE_EXPIRATION,order_number=14},{#field_type{type=fixed,length=4}}},
+					{#field{name=?DATE_SETTLEMENT,order_number=15},{#field_type{type=fixed,length=4}}},
+					{#field{name=?MERCHANTS_TYPE,order_number=18},{#field_type{type=fixed,length=4}}},
+					{#field{name=?POINT_OF_SERVICE_ENTRY_MODE,order_number=22},{#field_type{type=fixed,length=3}}},
+					{#field{name=?POINT_OF_SERVICE_CONDITION_CODE,order_number=25},{#field_type{type=fixed,length=2}}},
+					{#field{name=?AMOUNT_TRANSACTION_FEE,order_number=28},{#field_type{type=fixed,length=9}}},
+					{#field{name=?ACQUIRING_INSTITUTION_IDENT_CODE,order_number=32},{#field_type{type=var,length=2}}},
+					{#field{name=?FORWARDING_INSTITUTION_IDENT_CODE,order_number=33},{#field_type{type=var,length=2}}},
+					{#field{name=?TRACK_2_DATA,order_number=35},{#field_type{type=var,length=2}}},
+					{#field{name=?RETRIEVAL_REFERENCE_NUMBER,order_number=37},{#field_type{type=fixed,length=12}}},
+					{#field{name=?RESPONSE_CODE,order_number=39},{#field_type{type=fixed,length=2}}},					
+					{#field{name=?CARD_ACCEPTOR_TERMINAL_IDENTIFICACION,order_number=41},{#field_type{type=fixed,length=8}}},
+					{#field{name=?CARD_ACCEPTOR_IDENTIFICATION_CODE,order_number=42},{#field_type{type=fixed,length=15}}},
+					{#field{name=?CARD_ACCEPTOR_NAME_LOCATION,order_number=43},{#field_type{type=fixed,length=40}}},
+					{#field{name=?CURRENCY_CODE_TRANSACTION,order_number=49},{#field_type{type=fixed,length=3}}},
+					{#field{name=?RESERVED_ISO2,order_number=56},{#field_type{type=var,length=3}}},
+					{#field{name=?RESERVED_NATIONAL,order_number=59},{#field_type{type=var,length=3}}},	
+					{#field{name=?ORIGINAL_DATA_ELEMENTS,order_number=90},{#field_type{type=fixed,length=42}}},					
+					{#field{name=?REPLACEMENT_AMOUNTS,order_number=95},{#field_type{type=fixed,length=42}}},					
+					{#field{name=?RESERVED_PRIVATE_USE1,order_number=123},{#field_type{type=var,length=3}}},	
+					{#field{name=?RESERVED_PRIVATE_USE2,order_number=127},{#field_type{type=var,length=3}}}
+					];
+		"0430" -> [
+					{#field{name=?PRIMARY_ACCOUNT_NUMBER,order_number=2},{#field_type{type=var,length=2}}},
+					{#field{name=?RESPONSE_CODE,order_number=39},{#field_type{type=fixed,length=2}}},
 					{#field{name=?RESERVED_NATIONAL,order_number=57},{#field_type{type=var,length=3}}}
-					]					
+					]
 	end.
 
 get_message_bytes(List, MessageValues)->

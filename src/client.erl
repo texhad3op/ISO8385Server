@@ -11,22 +11,15 @@ start(Host, Port) ->
 
     {ok,Socket} = gen_tcp:connect(Host,Port,[binary, {packet, 0}]), 
     ok = gen_tcp:send(Socket, get_message()),
-%    String = receive_data(Socket, [], MP),
-%	io:format("from server:~s~n", [String]),		
+	
+	Answer = receive_data(Socket, []),
+	Message = iso_message:get_message_values(Answer),
+	iso_message:print_message(Message),
 	gen_tcp:close(Socket).	
 
 	
-receive_data(Socket, SoFar, MP) ->
-    receive
-		{tcp,Socket,Bin} ->  
-			io:format("got:~s~n", [Bin]),
-			case re:run(Bin,MP) of
-				{match, _} -> list_to_binary(reverse([Bin|SoFar]));
-				nomatch -> receive_data(Socket, [Bin|SoFar], MP)
-			end;
-		{tcp_closed,Socket} -> 
-			list_to_binary(reverse(SoFar))
-    end.
+receive_data(Socket, SoFar)->
+	socket_processing:process_data(Socket, SoFar).
 
 get_message()->
 	MessageValues = dict:from_list(
