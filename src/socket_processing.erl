@@ -9,7 +9,6 @@ process_data(Socket, SoFar) ->
 			if 
 				2 < WholeMessageLength -> 
 					<<Length1:8, Length2:8, _/binary >> = Bin,
-					io:format("~p ~p", [Length1, Length2]),
 					RealMessageLength = extract_length(Length1, Length2),
 					if 
 						RealMessageLength+2 == WholeMessageLength -> 

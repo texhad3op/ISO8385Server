@@ -1,8 +1,8 @@
 -module(client).
 -compile(export_all).
 -import(lists, [reverse/1]).
--import(iso_message, [generate_message/2]).
 -include("field_constants.hrl").
+-import(iso_message, [generate_message/2]).
 
 start() ->
     start("127.0.0.1", 8080).	

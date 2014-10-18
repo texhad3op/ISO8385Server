@@ -57,6 +57,27 @@ f10()->
 	print_message(get_message_values(B)).
 	%io:format("~p~n~n~n~n~n~n~n~n",[get_message_values(B)]).
 	
+f11()->
+	MessageValues = dict:from_list(
+		[{?PRIMARY_ACCOUNT_NUMBER, "9826132500000000181"},
+		{?RESPONSE_CODE, "20"},
+		{?ADDITIONAL_RESPONSE_DATA, "1234567890123456789012345"}
+		]),
+			
+	Message = generate_message("0210", MessageValues),
+	
+	io:format("~p~n~n~n~n~n~n~n~n",[MessageValues]),
+	
+	
+	MMM = iso_message:get_message_values(Message),
+	io:format("???????~n"),	
+	print_message(MMM),
+	io:format("???????~n"),	
+	file:write_file("out0210.bin", Message),
+
+	{ok, Data} = file:read_file("out0210.bin"),
+	B = binary:bin_to_list(Data,{0,byte_size(Data)}),
+	print_message(get_message_values(B)).
 	
 
 f9()->
@@ -180,9 +201,8 @@ get_message_structure(MTI)->
 		"0210" -> [
 					{#field{name=?PRIMARY_ACCOUNT_NUMBER,order_number=2},{#field_type{type=var,length=2}}},
 					{#field{name=?RESPONSE_CODE,order_number=39},{#field_type{type=fixed,length=2}}},
-					{#field{name=?ADDITIONAL_RESPONSE_DATA,order_number=44},{#field_type{type=fixed,length=25}}},
-					{#field{name=?ADDITIONAL_AMOUNTS,order_number=54},{#field_type{type=fixed,length=120}}}
-					%{#field{name=?RESERVED_NATIONAL,order_number=57},{#field_type{type=var,length=3}}}
+					{#field{name=?RETRIEVAL_REFERENCE_NUMBER,order_number=37},{#field_type{type=fixed,length=12}}},	
+					{#field{name=?ADDITIONAL_RESPONSE_DATA,order_number=44},{#field_type{type=fixed,length=25}}}
 					];
 
 		"0420" -> [		
