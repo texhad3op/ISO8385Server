@@ -5,5 +5,5 @@
               {applications,[kernel,stdlib]},
               {mod,{iso8385server,[]}},
               {env,[]},
-              {modules,[client,iso8385server,iso_message,socket_processing,
-                        tests]}]}.
+              {modules,[client,client2,iso8385server,iso_message,
+                        socket_processing,tests]}]}.

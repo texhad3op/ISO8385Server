@@ -7,13 +7,21 @@
 start()->
     {ok, Listen} = gen_tcp:listen(8080, [binary, {packet, 0},
 					 {reuseaddr, true},
-					 {active, true}]),
+					 {active, true},
+					 {send_timeout, 100},
+					 {send_timeout_close, true}
+					 ]),
 	io:format("Listen...~n"),
     process(Listen).	
 
 process(Listen)->
 	{ok, Socket} = gen_tcp:accept(Listen),
-	socket_processor(Socket),
+	try 
+		socket_processor(Socket)
+	catch
+		_: _ -> io:format("Was Error!!!")
+	end,
+
     process(Listen).	
 
 socket_processor(Socket)->

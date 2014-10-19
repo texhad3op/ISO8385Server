@@ -4,6 +4,7 @@
 process_data(Socket, SoFar) ->
     receive
 		{tcp, Socket, Bin} -> 
+			io:format("<<<<~p~n",[Bin]),
 			WholeMessageLength = length(binary_to_list(Bin)),
 			Ret = 
 			if 
@@ -19,7 +20,12 @@ process_data(Socket, SoFar) ->
 			end,	
 			Ret;
 		{tcp_closed,Socket} -> 
+			io:format("!!!Socket was closed!!!"),
 			list_to_binary(lists:reverse(SoFar))
+        after 1000->
+                io:format("Send timeout, closing!~n",
+						  []),
+			gen_tcp:close(Socket)		
     end.
 	
 extract_length(A, B)->
