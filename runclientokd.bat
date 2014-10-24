@@ -1,0 +1,1 @@
+erl -noshell -pa /ebin -s client2 start -s init stop
