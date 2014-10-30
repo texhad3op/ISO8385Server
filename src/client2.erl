@@ -1,5 +1,5 @@
 -module(client2).
--compile(export_all).
+-export([start/0, get_message/0]).
 -import(lists, [reverse/1]).
 -include("field_constants.hrl").
 -import(iso_message, [generate_message/2]).
@@ -11,7 +11,6 @@ start(Host, Port) ->
 
     {ok,Socket} = gen_tcp:connect(Host,Port,[binary, {packet, 0}]), 
     ok = gen_tcp:send(Socket, get_message()),
-	%ok = gen_tcp:send(Socket, [0,5,6]),
 	Answer = receive_data(Socket, []),
 	Message = iso_message:get_message_values(Answer),
 	iso_message:print_message(Message),

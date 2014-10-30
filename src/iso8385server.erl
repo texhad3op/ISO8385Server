@@ -1,8 +1,7 @@
 -module(iso8385server).
--compile(export_all).
--import(lists, [reverse/1]).
+-export([start/0, process/1, process_message/2]).
 -include("field_constants.hrl").
--import(iso_message, [get_message_values/1, get_answer_code_for_message/1, get_message_structure/1]).
+
 
 start()->
     {ok, Listen} = gen_tcp:listen(8080, [binary, {packet, 0},
@@ -34,35 +33,31 @@ socket_processor(Socket)->
 receive_data(Socket, SoFar)->
 	socket_processing:process_data(Socket, SoFar).
 	
+	
+get_message_value(Key, Dict)->
+	case dict:fetch(Key, Dict) of
+			[Val]->Val;
+			error->""
+	end.
+	
 process_message(Socket, {MTI, MessageIn})->
-
-	RespMTI = iso_message:get_answer_code_for_message(MTI),
-	
-	iso_message:print_message({MTI, MessageIn}),
-	Pan = case dict:fetch(?PRIMARY_ACCOUNT_NUMBER, MessageIn) of
-		[Val]->Val;
-		error->" "
+	ResponseMessage = case MTI of
+		"0200"->process_message_0200(MessageIn);
+		"0420"->process_message_0420(MessageIn)
 	end,
-
-	RRN = case dict:fetch(?RETRIEVAL_REFERENCE_NUMBER, MessageIn) of
-		[Val1]->Val1;
-		error->" "
-	end,	
-
-	io:format("!!!!!!!!!!!!>~p<",[RRN]),	
+	gen_tcp:send(Socket, ResponseMessage).
 	
+process_message_0200(MessageIn)->
+	RespMTI = iso_message:get_answer_code_for_message("0200"),
+	Pan = get_message_value(?PRIMARY_ACCOUNT_NUMBER, MessageIn),
+	Rrn = get_message_value(?RETRIEVAL_REFERENCE_NUMBER, MessageIn),	
 	MessageValues = dict:from_list(
 		[
 		{?PRIMARY_ACCOUNT_NUMBER, Pan},
 		{?RESPONSE_CODE, "20"},
-		{?RETRIEVAL_REFERENCE_NUMBER, RRN},
+		{?RETRIEVAL_REFERENCE_NUMBER, Rrn},
 		{?ADDITIONAL_RESPONSE_DATA, "1234567890123456789012345"}
 		]),
-		
-		
-	ResponseMessage = iso_message:generate_message(RespMTI, MessageValues),	
-	MMM = iso_message:get_message_values(ResponseMessage),
-	io:format("???????~n"),	
-	iso_message:print_message(MMM),
-	io:format("???????~n"),	
-	gen_tcp:send(Socket, ResponseMessage).
+	iso_message:generate_message(RespMTI, MessageValues).	
+process_message_0420(_MessageIn)->
+0.

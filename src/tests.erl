@@ -1,11 +1,8 @@
 -module(tests).
--compile(export_all).
+-export([f/0, testf/0]).
 
 f()->
-	io:format("~p", [d(1, 0)]).
+	testf().
 	
-d(A, B)->
-	case A of 
-		0 -> B;
-		_ -> A+255+B
-	end.
+testf()->
+	io:format("tiu!").
