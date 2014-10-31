@@ -5,5 +5,7 @@
               {applications,[kernel,stdlib]},
               {mod,{iso8385server,[]}},
               {env,[]},
-              {modules,[client,client2,iso8385server,iso_message,
-                        socket_processing,tests]}]}.
+              {modules,[client,client2,dbtest,dbtest22,iso8385server,
+                        iso_message,pgsql,pgsql_binary,pgsql_connection,
+                        pgsql_fdatetime,pgsql_idatetime,pgsql_sock,
+                        pgsql_types,socket_processing,tests]}]}.

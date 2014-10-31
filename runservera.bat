@@ -1,0 +1,1 @@
+erl -sname gandalf@localhost -noshell -pa /ebin -s iso8385server starta -s init stop

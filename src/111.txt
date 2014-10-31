@@ -1,0 +1,94 @@
+
+dbg:stop_clear().
+
+
+dbg:tracer().
+dbg:n('gandalf@localhost').
+dbg:tp(iso8385server, process_message, 2, []).
+dbg:p(all, c).
+
+dbg:tracer().
+dbg:n('gandalf@localhost').
+dbg:tp(io, format, 2, []).
+dbg:p(all, c).
+
+dbg:tracer().
+dbg:n('gandalf@localhost').
+dbg:tp(iso8385server, process, 1, []).
+dbg:p(all, c).
+
+dbg:tracer().
+dbg:n('gandalf@localhost').
+dbg:tp({iso8385server, process_message, 2}, []).
+dbg:p(all, c).
+
+dbg:tracer().
+dbg:n('gandalf@localhost').
+dbg:tp({tests, testf, 0}, []).
+dbg:p(all, c).
+
+dbg:tracer().
+dbg:n('third@localhost').
+dbg:tp({client2, start, 0}, []).
+dbg:p(all, c).
+-------------------------
+
+dbg:stop_clear().
+dbg:tracer().
+dbg:n('gandalf@localhost').
+dbg:tp(iso8385server, start, 0, []).
+dbg:p(all, c).
+
+dbg:stop_clear().
+dbg:tracer().
+dbg:n('gandalf@localhost').
+dbg:tp(iso8385server, process, 1, []).
+dbg:p(all, c).
+
+dbg:stop_clear().
+dbg:tracer().
+dbg:n('gandalf@localhost').
+dbg:tp(iso8385server, fuu, 0, []).
+dbg:p(all, c).
+
+dbg:tp({iso8385server, process_message, 2}, []).
+
+
+dbg:stop_clear().
+dbg:tracer().
+dbg:n('gandalf@localhost').
+dbg:tp(io, format, 2, []).
+dbg:p(all, c).
+
+
+------------------------------------------
+
+dbg:stop_clear().
+dbg:tracer().
+dbg:n('gandalf@localhost').
+dbg:tp(debtest, test0, 0, []).
+dbg:tp(debtest, test1, 0, []).
+dbg:tp(debtest, test2, 0, []).
+dbg:tp(debtest, test3, 0, []).
+dbg:p(all, c).
+
+
+dbg:stop_clear().
+dbg:tracer().
+dbg:n('gandalf@localhost').
+dbg:tpl(debtest, fun1, 0, []).
+dbg:tpl(debtest, test0, 0, []).
+dbg:tpl(debtest, test1, 0, []).
+dbg:tpl(debtest, test2, 0, []).
+dbg:tpl(debtest, test3, 0, []).
+dbg:p(all, c).
+
+
+
+
+dbg:stop_clear().
+dbg:tracer().
+dbg:n('gandalf@localhost').
+dbg:tpl(iso8385server, process_message, 2, []).
+dbg:p(all, c).
+dbg: ctp({Mod, Fun, Arity}). 

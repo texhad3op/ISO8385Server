@@ -1,15 +1,14 @@
 -module(iso8385server).
--export([start/0, process/1, process_message/2]).
+-export([start/0, process/1, process_message/2, starta/0, processa/1]).
 -include("field_constants.hrl").
 
 
 start()->
+
+	spawn(fun() -> processa(Listen) end).
     {ok, Listen} = gen_tcp:listen(8080, [binary, {packet, 0},
 					 {reuseaddr, true},
-					 {active, true},
-					 {send_timeout, 100},
-					 {send_timeout_close, true}
-					 ]),
+					 {active, true}]),
 	io:format("Listen...~n"),
     process(Listen).	
 
@@ -18,10 +17,31 @@ process(Listen)->
 	try 
 		socket_processor(Socket)
 	catch
-		_: _ -> io:format("Was Error!!!")
+		_:_ -> io:format("Was Error!!!")
 	end,
-
     process(Listen).	
+	
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+starta()->
+    {ok, Listen} = gen_tcp:listen(8080, [binary, {packet, 0},
+					 {reuseaddr, true},
+					 {active, true}]),
+	io:format("Listen...~n"),
+	spawn(fun() -> processa(Listen) end).
+
+processa(Listen)->
+	{ok, Socket} = gen_tcp:accept(Listen),
+	spawn(fun() -> processa(Listen) end),
+	{ok, Socket} = gen_tcp:accept(Listen),
+%	try 
+		socket_processor(Socket).
+%	catch
+%		_:_ -> io:format("Was Error!!!")
+%	end.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
+	
+	
 
 socket_processor(Socket)->
 	io:format("Accepted...~n"),	
